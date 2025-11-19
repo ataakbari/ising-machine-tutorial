@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# CUDA
+*.o
+*.i
+*.ii
+*.gpu
+*.ptx
+*.cubin
+*.fatbin
+ising_cuda
+
+# Output files
+*.png
+*.jpg
+*.pdf
+*.dat
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
