@@ -25,12 +25,20 @@ build/
 *.fatbin
 ising_cuda
 
+# Exclude folders
+cuda/
+_video_/
+**/outputs/
+
 # Output files
 *.png
 *.jpg
 *.pdf
 *.dat
 *.log
+*.mp4
+*.avi
+*.gif
 
 # IDE
 .vscode/
@@ -42,3 +50,7 @@ ising_cuda
 # macOS
 .DS_Store
 
+
+# Temporary push scripts
+PUSH_COMMANDS.sh
+PUSH_TO_GITHUB.md
