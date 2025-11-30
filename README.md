@@ -1,6 +1,6 @@
 # Ising Machine Tutorial
 
-Minimal implementations of Ising machines for computational optimization using simulated annealing.
+PyTorch implementation of Ising machines for computational optimization using simulated annealing.
 
 **Blog post**: [From Error Correction to Energy Minimization: The Ising Machine](https://ataakbari.github.io/posts/ising-machines.html)
 
@@ -10,33 +10,25 @@ Minimal implementations of Ising machines for computational optimization using s
 # Install dependencies
 pip install -r requirements.txt
 
-# Run all PyTorch experiments (generates videos!)
+# Run all experiments
 cd pytorch
 python run_all_experiments.py
 ```
 
-**Output**: Evolution videos and final state images in `outputs/` folder
-
-📖 **New here?** Start with [`GETTING_STARTED.md`](GETTING_STARTED.md)
+**Output**: Final state images in `outputs/` folder
 
 ## What is this?
 
 The Ising model describes magnetic materials through interacting spins. It turns out to be a universal framework for solving NP-hard optimization problems by mapping them to energy minimization.
 
-This repository provides clean, educational implementations in:
-
-- **PyTorch** (GPU-accelerated, easy to experiment with)
-- **Pure CUDA** (maximum performance, closer to hardware)
-
-Both support:
+This repository provides a clean, educational PyTorch implementation with:
 
 - N-dimensional lattices (1D, 2D, 3D, ...)
-- With and without external magnetic fields
+- External magnetic fields (uniform and 2D patterns)
 - Simulated annealing optimization
+- Binary field patterns (maze and Fibonacci spiral)
 
-## Quick Start
-
-### PyTorch Version
+## Running Experiments
 
 ```bash
 # Install dependencies
@@ -52,20 +44,7 @@ python experiment_antiferromagnetic.py
 python experiment_external_field.py
 ```
 
-**Output**: Final state images (.png) for each experiment.
-
-### CUDA Version
-
-```bash
-# Compile (requires CUDA toolkit)
-cd cuda
-make
-
-# Run examples
-./ising_cuda
-```
-
-**Output**: Console output showing energy minimization progress.
+**Output**: Final state images (.png) for each experiment in `outputs/` directory.
 
 ## Physics Background
 
@@ -100,26 +79,21 @@ Find low-energy configurations by gradually cooling:
 ```
 ising-machine-tutorial/
 ├── pytorch/
-│   ├── model.py                      # IsingMachine class
-│   ├── experiment_ferromagnetic.py   # J > 0 (spins align)
+│   ├── model.py                         # IsingMachine class
+│   ├── experiment_ferromagnetic.py      # J > 0 (spins align)
 │   ├── experiment_antiferromagnetic.py  # J < 0 (spins anti-align)
-│   ├── experiment_external_field.py  # h ≠ 0 (field bias)
-│   └── run_all_experiments.py        # Run all experiments
-├── cuda/
-│   ├── ising_cuda.cu                 # CUDA implementation
-│   ├── Makefile                      # Build system
-│   └── README.md                     # CUDA-specific docs
-├── examples/                          # Coming soon: MaxCut, TSP, etc.
+│   ├── experiment_external_field.py     # h ≠ 0 (field bias, maze & Fibonacci)
+│   └── run_all_experiments.py           # Run all experiments
 ├── README.md
 └── requirements.txt
 ```
 
 ## Experiments Included
 
-Each PyTorch experiment generates:
+Each experiment generates:
 
-- **Video**: Evolution of spin configuration during annealing (.mp4)
 - **Image**: Final spin state (.png)
+- **Field visualization**: For 2D external field patterns (.png)
 
 ### 1. Ferromagnetic (J > 0, no field)
 
@@ -194,17 +168,10 @@ magnetization = model.compute_magnetization()
 
 ## Implementation Notes
 
-### PyTorch Version
-
-- **Pros**: Easy to modify, visualize, integrate with ML
-- **Cons**: Python overhead, sequential Metropolis updates
-- **Best for**: Prototyping, learning, small-medium problems
-
-### CUDA Version
-
-- **Pros**: Maximum performance, true parallelism (checkerboard)
-- **Cons**: Harder to modify, requires CUDA toolkit
-- **Best for**: Large-scale problems, production use
+- **Easy to modify**: Clean object-oriented design with `IsingMachine` class
+- **Sequential Metropolis**: Standard Metropolis-Hastings algorithm (inherently sequential)
+- **GPU support**: Automatic CUDA/MPS detection (best for lattices ≥128×128)
+- **Best for**: Learning, prototyping, and medium-scale problems
 
 ## Mapping Problems to Ising Models
 
@@ -234,23 +201,24 @@ More examples coming in `/examples` directory.
 
 ## Requirements
 
-- **PyTorch**: Python 3.8+, PyTorch 2.0+, matplotlib, numpy
-- **CUDA**: CUDA toolkit 11.0+, nvcc compiler
+- Python 3.8+
+- PyTorch 2.0+
+- matplotlib
+- numpy
 
 See `requirements.txt` for exact versions.
 
 ## Performance
 
-Tested on NVIDIA RTX 4090:
+Typical performance on modern hardware:
 
-| System      | Method  | Spins  | Time (5000 steps) |
-| ----------- | ------- | ------ | ----------------- |
-| 2D 32×32    | PyTorch | 1,024  | ~2 seconds        |
-| 2D 64×64    | PyTorch | 4,096  | ~8 seconds        |
-| 2D 64×64    | CUDA    | 4,096  | ~0.3 seconds      |
-| 3D 32×32×32 | CUDA    | 32,768 | ~5 seconds        |
+| Lattice Size | Spins  | Time (2000 steps) |
+| ------------ | ------ | ----------------- |
+| 32×32        | 1,024  | ~1-2 seconds      |
+| 64×64        | 4,096  | ~5-8 seconds      |
+| 128×128      | 16,384 | ~20-30 seconds    |
 
-CUDA is ~25× faster due to parallel checkerboard updates.
+**Note**: The Metropolis-Hastings algorithm is inherently sequential, limiting GPU parallelization benefits for small lattices.
 
 ## Learn More
 
